@@ -1,0 +1,27 @@
+# application.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io  
+  
+spec:
+  project: default
+
+  source:
+    path: charts/nginx
+    repoURL: https://github.com/jei0486/demo-argocd.git
+    targetRevision: HEAD
+
+  destination:
+    namespace: nginx
+    server: "https://kubernetes.default.svc"
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

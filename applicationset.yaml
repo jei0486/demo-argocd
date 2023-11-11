@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: applicationset
+  namespace: argocd
+  #finalizers:
+    #- resources-finalizer.argocd.argoproj.io    
+    
+spec:
+  generators:
+  - list:
+      elements:
+      - app: nginx
+      - app: mysql             
+
+  template:
+    metadata:
+      name: '{{app}}'
+
+    spec:
+      project: default
+
+      source:
+        repoURL: https://github.com/jei0486/demo-argocd.git
+        targetRevision: HEAD
+        path: charts/{{app}}
+
+      destination:
+        server: 'https://kubernetes.default.svc'
+        namespace: '{{app}}'
+
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

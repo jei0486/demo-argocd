@@ -1,2 +1,7 @@
 # demo-argocd
-argocd app
+Argocd app
+
+### application crd
+```
+kubectl apply -f application.yaml
+```
